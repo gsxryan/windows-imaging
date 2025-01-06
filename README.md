@@ -5,7 +5,9 @@ This document describes how to use an SCCM Imaging CD-R (WinPE / PXE) to success
 
 TLDR: The critical components for success in this method is to: 
 1. Stop Imaging sequence before first automatic reboot by F8 command prompt in WinPE, open powershell to halt further progress.
-2. During the halt, use DISM to inject custom drivers for first successful reboot after the standard image task sequences are complete.
+2. diskpart, list disk, select disk X, clean, create partition primary, select partition 1, format fs=NTFS quick, active, assign
+3. During the halt, and after placing the initial task sequence down, use DISM to inject custom drivers for first successful reboot after the standard image task sequences are complete.
+4. dism /image:C:\ /Add-Driver /Driver:D:\M6700\Primary /Recurse /ForceUnsigned
 
 This approach highly prioritized optimizing the long term T2 support burden, focusing on reducing need for on-site support response, keeping machines in patched compliance, utilizing existing imaging resources,  and has made choices to optimize these. 
 - IT mode storage controllers (optional: software RAID only)
@@ -37,7 +39,7 @@ M6700, M6800 note (or other single drive Non-RAID setup):  Be sure RAID On is se
         b. SMART Reporting: [CHECK] Enable SMART Reporting
     4. Security > Absolute > [disabled]
     5. Secure Boot > 
-        a. Secure boot Enable: [SELECT] Disabled (*)
+        a. Secure boot Enable: [SELECT] Enabled (*)
     6. Virtualization Support > 
         a. Virtualization: [CHECK] Enable Virtualization Technology
         b. VT for Direct I/O: [CHECK] Enable VT for Direct I/O
